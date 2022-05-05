@@ -4,7 +4,7 @@
       <div class="profile-avatar">
         <img src="@/assets/img/profile-pic.jpg" alt="" />
 
-        <p>Cataline S. Rocha</p>
+        <p>Catalin S. Rocha</p>
         <BaseButton
           @click.native="toggleMenuActive"
           btnLink

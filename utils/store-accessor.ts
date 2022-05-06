@@ -3,11 +3,15 @@ import { getModule } from 'vuex-module-decorators'
 
 import Mobile from '@/store/mobile'
 
+import UserRegister from '@/store/users/register'
+
 // eslint-disable-next-line import/no-mutable-exports
 let mobile: Mobile
+let userRegister: UserRegister
 
 const initializeStores = (store: Store<any>): void => {
   mobile = getModule(Mobile, store)
+  userRegister = getModule(UserRegister, store)
 }
 
-export { initializeStores, mobile }
+export { initializeStores, mobile, userRegister }

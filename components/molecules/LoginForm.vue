@@ -27,14 +27,12 @@ export default Vue.extend({
   methods: {
     async onSubmit() {
       try {
-        auth.create({
+        await auth.create({
           email: this.email,
           password: this.password
         })
-        this.email = ''
-        this.password = ''
-
         this.$router.push('/')
+
       } catch {
         this.$notify({
           type: 'error',

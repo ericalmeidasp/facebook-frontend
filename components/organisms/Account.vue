@@ -2,12 +2,12 @@
   <div class="account-container">
     <div class="account-avatar">
       <div class="image">
-        <img src="/profile-pic.jpg" />
+        <img :src="$user.avatar ? $user.avatar.url : '/profile-pic.jpg'" />
       </div>
       <div class="info">
-        <p>Caterine Silva</p>
+        <p>{{ $user.name }}</p>
         <label for="avatar">Alterar foto do perfil</label>
-        <input id="avatar" type="file" />
+        <input id="avatar" type="file" @input="updateAvatar" />
       </div>
     </div>
     <AccountForm />
@@ -19,8 +19,22 @@
 
 <script lang="ts">
 import Vue from 'vue'
+import { users, userAvatar } from '@/store'
 
-export default Vue.extend({})
+export default Vue.extend({
+  computed: {
+    $user() {
+      return users.$single
+    }
+  },
+
+  methods: {
+    async updateAvatar(event: any) {
+      const file = event.target.files[0]
+      await userAvatar.update({ file })
+    }
+  }
+})
 </script>
 
 <style lang="scss" scoped>
@@ -32,29 +46,36 @@ export default Vue.extend({})
   grid-gap: 2.1rem;
   border-radius: 24px;
   margin-top: 3rem;
+
   .account-avatar {
     display: grid;
     grid-template-columns: 0.5fr 1fr;
     grid-gap: 1.1rem;
     align-items: center;
+
     @include screen('medium', 'small') {
       grid-template-columns: auto 1fr;
     }
+
     .image {
       text-align: right;
+
       img {
         width: 60px;
         border-radius: 50%;
       }
     }
+
     .info {
       input {
         display: none;
       }
+
       p {
         color: color(white);
         font-weight: bold;
       }
+
       label {
         background: none;
         outline: none;
@@ -65,15 +86,18 @@ export default Vue.extend({})
       }
     }
   }
+
   .disable-account {
     display: grid;
     grid-template-columns: 0.5fr 1fr;
     grid-template-areas: '_ Button';
     grid-gap: 1.1rem;
+
     @include screen('medium', 'small') {
       grid-template-columns: 1fr;
       grid-template-areas: 'Button';
     }
+
     button {
       outline: none;
       background: none;

@@ -19,9 +19,9 @@
     </form>
 
     <div class="menu-bar-actions">
-      <NuxtLink to="/123" class="profile-avatar">
-        <img src="@/assets/img/profile-pic.jpg" alt="Foto do perfil" />
-        <p>Caterine</p>
+      <NuxtLink :to="`/${$user.username}`" class="profile-avatar">
+        <img :src="$user.avatar.url || '@/assets/img/profile-pic.jpg'" alt="Foto do perfil" />
+        <p>{{ $user.name }}</p>
       </NuxtLink>
 
       <ul class="actions">
@@ -59,7 +59,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { mobile } from '@/store'
+import { mobile, users } from '@/store'
 
 export default Vue.extend({
   data() {
@@ -82,6 +82,9 @@ export default Vue.extend({
     $isMenuActive() {
       return mobile.$isMenuActive
     },
+    $user() {
+      return users.$single
+    }
   },
 })
 </script>

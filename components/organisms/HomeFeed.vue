@@ -4,6 +4,7 @@
 
     <div class="posts">
       <PostCard />
+      <PostCard />
     </div>
   </div>
 </template>

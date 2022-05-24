@@ -5,11 +5,7 @@
     </NuxtLink>
 
     <form>
-      <img
-        class="facebook-icon"
-        src="@/assets/img/facebook-icon.svg"
-        alt="Facebook"
-      />
+      <img class="facebook-icon" src="@/assets/img/facebook-icon.svg" alt="Facebook" />
 
       <BaseInput :placeholder="'Procurar no Facebook'" class="base-input" />
 
@@ -32,11 +28,8 @@
         </li>
 
         <li class="notification-button">
-          <button
-            @click="notificationsIsOpened = !notificationsIsOpened"
-            href="#"
-            :class="{ 'active-notifications': notificationsIsOpened }"
-          >
+          <button @click="notificationsIsOpened = !notificationsIsOpened" href="#"
+            :class="{ 'active-notifications': notificationsIsOpened }">
             <fa :icon="['fas', 'bell']" class="bell" />
           </button>
 
@@ -60,7 +53,6 @@
 <script lang="ts">
 import Vue from 'vue'
 import { mobile, users } from '@/store'
-
 export default Vue.extend({
   data() {
     return {
@@ -71,10 +63,8 @@ export default Vue.extend({
     toggleMenuActive() {
       const body = document.querySelector('body') as HTMLElement
       const html = document.querySelector('html') as HTMLElement
-
       body.classList.toggle('overflow-hidden')
       html.classList.toggle('overflow-hidden')
-
       mobile.toggle()
     },
   },
@@ -88,8 +78,6 @@ export default Vue.extend({
   },
 })
 </script>
-
->
 
 <style lang="scss" scoped>
 .menu-bar {
@@ -118,6 +106,7 @@ export default Vue.extend({
 
   form {
     position: relative;
+
     .facebook-icon {
       position: absolute;
       left: 0.188rem;
@@ -125,6 +114,7 @@ export default Vue.extend({
       transform: translateY(-50%);
       width: 1.813rem;
     }
+
     .search-icon {
       position: absolute;
       right: 0.688rem;
@@ -134,15 +124,18 @@ export default Vue.extend({
       background: none;
       outline: none;
       cursor: pointer;
+
       img {
         width: 100%;
       }
     }
+
     .base-input {
       width: 100%;
       padding: 0 2.5rem;
     }
   }
+
   .menu-bar-actions {
     display: grid;
     grid-auto-flow: column;
@@ -150,6 +143,7 @@ export default Vue.extend({
     grid-gap: 1.5rem;
     align-items: center;
     width: max-content;
+
     .profile-avatar {
       display: grid;
       grid-template-columns: repeat(2, auto);
@@ -161,23 +155,29 @@ export default Vue.extend({
       transition: all 500ms ease;
       border: 2px solid transparent;
       cursor: pointer;
+
       @include screen('medium', 'small') {
         display: none;
       }
+
       &.nuxt-link-exact-active {
         border: 2px solid #1aafff;
       }
+
       &:hover {
         border: 2px solid color(blue, shade1);
       }
+
       img {
         width: 1.875rem;
         border-radius: 50%;
       }
+
       p {
         color: color(white);
       }
     }
+
     .actions {
       display: grid;
       grid-template-columns: auto;
@@ -192,8 +192,10 @@ export default Vue.extend({
         font-size: 22px;
         color: color(white);
         position: relative;
+
         &.nuxt-link-exact-active {
           color: color(blue);
+
           &:after {
             content: '';
             position: absolute;
@@ -211,17 +213,21 @@ export default Vue.extend({
           display: none;
         }
       }
+
       .settings-link {
         @include screen('medium', 'small') {
           display: none;
         }
       }
+
       .notification-button {
         position: relative;
+
         .active-notifications {
           color: color(blue);
         }
-        > button {
+
+        >button {
           font-size: 22px;
           color: #f4f6f8;
           position: relative;
@@ -232,22 +238,27 @@ export default Vue.extend({
       }
     }
   }
+
   .btn-open {
     background: none;
     outline: none;
     cursor: pointer;
+
     @include screen('large', 'infinity') {
       display: none;
     }
+
     .hamburger {
       font-size: 26px;
       color: white;
     }
   }
+
   .home-link {
     &.nuxt-link-exact-active {
       color: color(blue);
       position: relative;
+
       &:after {
         content: '';
         position: absolute;

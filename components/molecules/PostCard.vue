@@ -2,35 +2,50 @@
   <div class="post-card">
     <div class="post-card-top">
       <div class="profile-avatar">
-        <img src="@/assets/img/profile-pic.jpg" alt="" />
+        <img :src="post.user.avatar ? post.user.avatar.url : '/profile-pic.jpg'" alt="" />
 
         <div>
-          <p>Stephanny Motta</p>
-          <span>18:37</span>
+          <p>{{ post.user.name }}</p>
+          <span>{{ new Date(post.createdAt).toLocaleString() }}</span>
         </div>
       </div>
 
       <div>
         <p class="post-text">
-          Lorem, ipsum dolor sit amet consectetur adipisicing elit. Laborum non
-          labore sit nesciunt fuga fugit ut, voluptas iusto.
+          {{ post.description }}
         </p>
       </div>
     </div>
 
     <div class="card-middle">
-      <img src="@/assets/img/post1.png" alt="" />
+      <img v-if="post.media" :src="post.media.url" alt="" />
+      <img v-else />
     </div>
 
     <div class="reactions-counter">
-      <div class="counter-box">
-        <img src="@/assets/img/like-icon.svg" alt="" />
-        <span>13</span>
+      <div class="counter-box" v-if="post.reactionsCount.like > 0">
+        <img src="@/assets/img/reactions/like.svg" alt="" />
+        <span>{{ post.reactionsCount.like }}</span>
       </div>
 
-      <div class="counter-box">
-        <img src="@/assets/img/heart-icon.svg" alt="" />
-        <span>08</span>
+      <div class="counter-box" v-if="post.reactionsCount.love > 0">
+        <img src="@/assets/img/reactions/heart.svg" alt="" />
+        <span>{{ post.reactionsCount.love }}</span>
+      </div>
+
+      <div class="counter-box" v-if="post.reactionsCount.haha > 0">
+        <img src="@/assets/img/reactions/laugh.svg" alt="" />
+        <span>{{ post.reactionsCount.haha }}</span>
+      </div>
+
+      <div class="counter-box" v-if="post.reactionsCount.sad > 0">
+        <img src="@/assets/img/reactions/sad.svg" alt="" />
+        <span>{{ post.reactionsCount.sad }}</span>
+      </div>
+
+      <div class="counter-box" v-if="post.reactionsCount.angry > 0">
+        <img src="@/assets/img/reactions/angry.svg" alt="" />
+        <span>{{ post.reactionsCount.angry }}</span>
       </div>
     </div>
 
@@ -66,36 +81,23 @@
     <div class="post-comments" :class="{ 'open-comments': openedComments }">
       <div class="comment-form">
         <form>
-          <img src="@/assets/img/profile-pic.jpg" alt="" />
-          <ExpandableTextarea
-            v-model="text"
-            placeholder="Escreva seu comentário"
-          />
+          <img :src="post.user.avatar ? post.user.avatar.url : '/profile-pic.jpg'" alt="" />
+          <ExpandableTextarea v-model="text" placeholder="Escreva seu comentário" />
         </form>
       </div>
 
       <div class="comments">
-        <div class="comment">
-          <img src="@/assets/img/profile-pic.jpg" alt="" />
+
+        <div class="comment" v-for="comment in post.comments">
+          <img :src="comment.user.avatar ? comment.user.avatar.url : '/profile-pic.jpg'" alt="" />
           <div class="comment-content">
-            <span>Deborah Gomes</span>
+            <span>{{ comment.user.name }}</span>
             <p>
-              Lorem ipsum dolor sit, amet consectetur adipisicing elit. Non
-              culpa temporibus unde doloremque eos dolore.
+              {{ comment.content }}
             </p>
           </div>
         </div>
 
-        <div class="comment">
-          <img src="@/assets/img/profile-pic.jpg" alt="" />
-          <div class="comment-content">
-            <span>Deborah Gomes</span>
-            <p>
-              Lorem ipsum dolor sit, amet consectetur adipisicing elit. Non
-              culpa temporibus unde doloremque eos dolore.
-            </p>
-          </div>
-        </div>
       </div>
 
       <div class="commments-actions">
@@ -112,6 +114,7 @@
 import Vue from 'vue'
 
 export default Vue.extend({
+  props: ['post'],
   data(): any {
     return {
       openedComments: false,
@@ -127,10 +130,12 @@ export default Vue.extend({
   border-radius: 1.25rem;
   box-shadow: 1px 3.2px 8.7px 0.3px rgba(1, 1, 1, 0.19);
   padding-bottom: 1.563rem;
+
   .post-card-top {
     padding: 1.2rem;
     display: grid;
     grid-gap: 1rem;
+
     .profile-avatar {
       display: grid;
       grid-template-columns: repeat(2, auto);
@@ -138,32 +143,38 @@ export default Vue.extend({
       justify-content: start;
       align-items: center;
 
-      > div {
+      >div {
         display: grid;
         grid-gap: 0.33rem;
+
         p {
           color: color(white);
           font-weight: bold;
         }
+
         span {
           color: color(gray, shade1);
           font-size: 0.875rem;
         }
       }
+
       img {
         width: 3.5rem;
         border-radius: 2.438rem;
       }
     }
+
     .post-text {
       color: color(white);
     }
   }
+
   .card-middle {
     img {
       width: 100%;
     }
   }
+
   .reactions-counter {
     display: grid;
     grid-auto-flow: column;
@@ -172,6 +183,7 @@ export default Vue.extend({
     padding-left: 1.7rem;
     position: relative;
     top: -21px;
+
     .counter-box {
       position: relative;
       color: #98a9bc;
@@ -179,18 +191,21 @@ export default Vue.extend({
       align-items: center;
       justify-items: center;
       grid-gap: 0.6rem;
+
       img {
         width: 1.875rem;
       }
     }
   }
+
   .post-actions {
     display: grid;
     grid-auto-flow: column;
     grid-template-columns: repeat(2, 1fr);
     border-top: 1px solid #23354b;
     border-bottom: 1px solid #23354b;
-    > div {
+
+    >div {
       cursor: pointer;
       display: grid;
       grid-auto-flow: column;
@@ -201,8 +216,10 @@ export default Vue.extend({
       justify-content: center;
       padding: 1rem 0;
     }
+
     .btn-reactions {
       position: relative;
+
       .reactions {
         visibility: hidden;
         opacity: 0;
@@ -218,6 +235,7 @@ export default Vue.extend({
         border-radius: 3.438rem;
         box-shadow: 1px -6px 8px rgba(0, 0, 0, 0.25);
         transition: all 300ms ease;
+
         @include screen('medium', 'small') {
           top: -3.188rem;
         }
@@ -229,21 +247,26 @@ export default Vue.extend({
           transform: scale(0.2);
           opacity: 0;
           transition: all 300ms;
+
           img {
             width: 51px;
             transition: all 300ms ease;
+
             @include screen('medium', 'small') {
               width: 2.5rem;
             }
+
             &:hover {
               transform: scale(1.15);
             }
           }
         }
       }
+
       &:hover .reactions {
         visibility: visible;
         opacity: 1;
+
         li {
           transform: scale(1);
           opacity: 1;
@@ -267,6 +290,7 @@ export default Vue.extend({
       }
     }
   }
+
   .post-comments {
     padding: 1.2rem;
     padding-bottom: 0;
@@ -276,15 +300,18 @@ export default Vue.extend({
     opacity: 0;
     transition: all 300ms ease;
     overflow: hidden;
+
     .comment-form {
       form {
         display: grid;
         grid-template-columns: auto 1fr;
         grid-gap: 1rem;
+
         img {
           width: 2.688rem;
           border-radius: 50%;
         }
+
         .grow-wrap {
           background: #112331;
           padding: 0.888rem 1.375rem;
@@ -292,14 +319,17 @@ export default Vue.extend({
         }
       }
     }
+
     .comments {
       display: grid;
       grid-gap: 0.7rem;
+
       .comment {
         display: grid;
         grid-template-columns: auto 1fr;
         align-items: center;
         grid-gap: 1rem;
+
         .comment-content {
           display: grid;
           grid-gap: 0.5rem;
@@ -308,21 +338,25 @@ export default Vue.extend({
           padding: 0.888rem 1.375rem;
           background: color(dark, shade2);
           color: color(white);
+
           span {
             font-size: 0.875rem;
             font-weight: bold;
           }
         }
+
         img {
           width: 2.688rem;
           border-radius: 50%;
         }
       }
     }
+
     .commments-actions {
       display: grid;
       grid-auto-flow: column;
       justify-content: space-between;
+
       button {
         outline: none;
         background: none;
@@ -331,6 +365,7 @@ export default Vue.extend({
       }
     }
   }
+
   .open-comments {
     height: auto;
     opacity: 1;

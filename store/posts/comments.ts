@@ -2,8 +2,8 @@ import { Module, VuexModule, Mutation, Action } from 'vuex-module-decorators'
 import { $axios } from '@/utils/nuxt-instance'
 import { Post } from '@/models'
 
-@Module({ name: 'posts/timelineposts', stateFactory: true, namespaced: true })
-export default class TimelinePosts extends VuexModule {
+@Module({ name: 'posts/comments', stateFactory: true, namespaced: true })
+export default class CommentsPosts extends VuexModule {
   private posts = [] as Post[]
 
   get $posts() {

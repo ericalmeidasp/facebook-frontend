@@ -7,6 +7,7 @@ import Auth from '@/store/auth'
 import Users from '@/store/users'
 import UserAvatar from '@/store/users/avatar'
 import TimelinePosts from '@/store/posts/timelineposts'
+import ReactionsPosts from '@/store/posts/reactions'
 
 // eslint-disable-next-line import/no-mutable-exports
 let mobile: Mobile
@@ -15,6 +16,7 @@ let auth: Auth
 let users: Users
 let userAvatar: UserAvatar
 let timelinePosts: TimelinePosts
+let reactionsPosts: ReactionsPosts
 
 const initializeStores = (store: Store<any>): void => {
   mobile = getModule(Mobile, store)
@@ -23,6 +25,7 @@ const initializeStores = (store: Store<any>): void => {
   users = getModule(Users, store)
   userAvatar = getModule(UserAvatar, store)
   timelinePosts = getModule(TimelinePosts, store)
+  reactionsPosts = getModule(ReactionsPosts, store)
 }
 
 export {
@@ -32,5 +35,6 @@ export {
   auth,
   users,
   userAvatar,
-  timelinePosts
+  timelinePosts,
+  reactionsPosts
 }

@@ -53,19 +53,19 @@
       <div class="btn-reactions">
         <ul class="reactions">
           <li class="reaction-like">
-            <img src="@/assets/img/reactions/like.svg" alt="" />
+            <img src="@/assets/img/reactions/like.svg" alt="" @click="updateReaction('like')" />
           </li>
           <li class="reaction-heart">
-            <img src="@/assets/img/reactions/heart.svg" alt="" />
+            <img src="@/assets/img/reactions/heart.svg" alt="" @click="updateReaction('love')" />
           </li>
           <li class="reaction-laugh">
-            <img src="@/assets/img/reactions/laugh.svg" alt="" />
+            <img src="@/assets/img/reactions/laugh.svg" alt="" @click="updateReaction('haha')" />
           </li>
           <li class="reaction-sad">
-            <img src="@/assets/img/reactions/sad.svg" alt="" />
+            <img src="@/assets/img/reactions/sad.svg" alt="" @click="updateReaction('sad')" />
           </li>
           <li class="reaction-angry">
-            <img src="@/assets/img/reactions/angry.svg" alt="" />
+            <img src="@/assets/img/reactions/angry.svg" alt="" @click="updateReaction('angry')" />
           </li>
         </ul>
 
@@ -81,7 +81,7 @@
     <div class="post-comments" :class="{ 'open-comments': openedComments }">
       <div class="comment-form">
         <form>
-          <img :src="post.user.avatar ? post.user.avatar.url : '/profile-pic.jpg'" alt="" />
+          <img :src="$user.avatar ? $user.avatar.url : '/profile-pic.jpg'" alt="" />
           <ExpandableTextarea v-model="text" placeholder="Escreva seu comentário" />
         </form>
       </div>
@@ -112,6 +112,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
+import { users, reactionsPosts } from '@/store'
 
 export default Vue.extend({
   props: ['post'],
@@ -121,6 +122,16 @@ export default Vue.extend({
       text: '',
     }
   },
+  computed: {
+    $user() {
+      return users.$single
+    }
+  },
+  methods: {
+    async updateReaction(type: string) {
+      await reactionsPosts.update({ type, postId: this.post.id })
+    }
+  }
 })
 </script>
 

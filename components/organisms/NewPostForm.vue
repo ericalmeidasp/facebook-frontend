@@ -6,7 +6,7 @@
     :class="{ 'active-form': isWritingANewPost, 'has-text': hasText }"
   >
     <div class="new-post-box">
-      <img src="@/assets/img/profile-pic.jpg" alt="" />
+      <img :src="$user.avatar ? $user.avatar.url : '/profile-pic.jpg'" alt="" />
 
       <ExpandableTextarea
         v-model="text"
@@ -16,7 +16,7 @@
     </div>
 
     <div v-show="false" class="uploaded-image-preview">
-      <img src="@/assets/img/profile-pic.jpg" alt="" />
+      <img :src="$user.avatar ? $user.avatar.url : '/profile-pic.jpg'" alt="" />
     </div>
 
     <div v-show="isWritingANewPost || hasText" class="form-action">
@@ -34,6 +34,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
+import { users } from '@/store'
 
 export default Vue.extend({
   data(): any {
@@ -46,6 +47,9 @@ export default Vue.extend({
     hasText(): boolean {
       return this.text.trim().length > 0
     },
+    $user() {
+      return users.$single
+    }
   },
   methods: {
     sendPost() {

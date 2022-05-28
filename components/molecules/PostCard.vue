@@ -111,11 +111,18 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
+import Vue, { PropOptions } from 'vue'
 import { users, reactionsPosts } from '@/store'
+import { ReactionsTypes, Post } from '~/models'
 
 export default Vue.extend({
-  props: ['post'],
+  name: 'PostCard',
+  props: {
+    post: {
+      type: Object,
+      required: true
+    } as PropOptions<Post>
+  },
   data(): any {
     return {
       openedComments: false,
@@ -129,7 +136,18 @@ export default Vue.extend({
   },
   methods: {
     async updateReaction(type: string) {
-      await reactionsPosts.update({ type, postId: this.post.id })
+      const reaction = await reactionsPosts.update({ type, postId: this.post.id })
+      const KeyIndex = type as ReactionsTypes
+
+      if (!this.post.activeReaction) {
+        this.post.activeReaction = type
+        this.post.reactionsCount[KeyIndex]++
+      } else {
+        const oldReaction = this.post.activeReaction as ReactionsTypes
+        this.post.reactionsCount[oldReaction]--
+        this.post.activeReaction = type
+        this.post.reactionsCount[KeyIndex]++
+      }
     }
   }
 })

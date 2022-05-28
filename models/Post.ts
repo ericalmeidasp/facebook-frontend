@@ -1,3 +1,5 @@
+import { ReactionsTypes } from "./reactionsTypes"
+
 interface Comments {
   id: number
   content: string
@@ -26,7 +28,7 @@ export interface Post {
   }
   media?: string | null
   commentsCount: number
-  activeReaction: boolean | null
+  activeReaction: ReactionsTypes | null
   reactionsCount: {
     like: number
     love: number

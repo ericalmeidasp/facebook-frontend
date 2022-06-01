@@ -1,11 +1,12 @@
 import { ReactionsTypes } from "./reactionsTypes"
 
-interface Comments {
+export interface Comments {
   id: number
+  postId?: number
   content: string
   createdAt: string
   updatedAt: string
-  user: {
+  user?: {
     id: number
     name: string
     username: string

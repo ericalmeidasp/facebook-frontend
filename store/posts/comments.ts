@@ -1,23 +1,18 @@
 import { Module, VuexModule, Mutation, Action } from 'vuex-module-decorators'
 import { $axios } from '@/utils/nuxt-instance'
-import { Post } from '@/models'
+import { Comments } from '~/models'
+
+interface StorePayload {
+  content: string
+  postId: number
+}
 
 @Module({ name: 'posts/comments', stateFactory: true, namespaced: true })
 export default class CommentsPosts extends VuexModule {
-  private posts = [] as Post[]
-
-  get $posts() {
-    return this.posts
-  }
-
-  @Mutation
-  private GETTIMELINE_POSTS(posts: Post[]) {
-    this.posts = posts
-  }
-
   @Action
-  public async index() {
-    const posts: Post[] = await $axios.$get('/posts')
-    this.context.commit('GETTIMELINE_POSTS', posts)
+  public async create(payload: StorePayload) {
+    const comment: Comments = await $axios.$post('/comments', payload)
+    this.context.commit('posts/timelineposts/UPDATE_POST_COMMENT', comment, { root: true })
+    
   }
 }

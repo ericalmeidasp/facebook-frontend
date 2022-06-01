@@ -3,7 +3,7 @@
     <NewPostForm />
 
     <div class="posts">
-      <PostCard v-for="post in $timelinePosts" :post="post" />
+      <PostCard v-for="post in $timelinePosts" :post="post" :key="post.id" />
     </div>
   </div>
 </template>

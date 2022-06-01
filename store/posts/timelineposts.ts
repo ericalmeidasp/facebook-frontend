@@ -1,6 +1,11 @@
 import { Module, VuexModule, Mutation, Action } from 'vuex-module-decorators'
 import { $axios } from '@/utils/nuxt-instance'
-import { Post, ReactionsTypes } from '@/models'
+import { Comments, Post, ReactionsTypes } from '@/models'
+
+interface UpdatePostReactionPayload {
+  type: ReactionsTypes
+  postId: number
+}
 
 @Module({ name: 'posts/timelineposts', stateFactory: true, namespaced: true })
 export default class TimelinePosts extends VuexModule {
@@ -15,10 +20,30 @@ export default class TimelinePosts extends VuexModule {
     this.posts = posts
   }
 
-  // @Mutation
-  // UPDATE_POST(postId: Post['id'], type: Post['activeReaction']) {
-  //   const index = this.posts.findIndex((element) => element.id === postId)
-  // }
+  @Mutation
+  UPDATE_POST_REACTION(reaction: UpdatePostReactionPayload) {
+    const index = this.posts.findIndex(
+      (element) => element.id === reaction.postId
+    )
+    if (!this.posts[index].activeReaction) {
+      this.posts[index].activeReaction = reaction.type
+      this.posts[index].reactionsCount[reaction.type]++
+    } else {
+      this.posts[index].reactionsCount[
+        this.posts[index].activeReaction as ReactionsTypes
+      ]--
+      this.posts[index].activeReaction = reaction.type
+      this.posts[index].reactionsCount[reaction.type]++
+    }
+  }
+
+  @Mutation
+  UPDATE_POST_COMMENT(comment: Comments) {
+    const index = this.posts.findIndex(
+      (element) => element.id === comment.postId
+    )
+    this.posts[index].comments.push(comment)
+  }
 
   @Action
   public async index() {

@@ -75,20 +75,26 @@
 
       <div @click="openedComments = !openedComments" class="btn-open-comments">
         <img src="@/assets/img/comment-icon.svg" alt="" />
-        <span>Comentar</span>
+        <span>Comentarios</span>
       </div>
     </div>
     <div class="post-comments" :class="{ 'open-comments': openedComments }">
       <div class="comment-form">
-        <form>
+        <form @keyup.enter="submitComment">
           <img :src="$user.avatar ? $user.avatar.url : '/profile-pic.jpg'" alt="" />
           <ExpandableTextarea v-model="text" placeholder="Escreva seu comentário" />
         </form>
       </div>
 
       <div class="comments">
-
-        <div class="comment" v-for="comment in post.comments">
+        <div class="commments-actions">
+          <button @click="howManyCommentsShow += 3">Mostrar mais</button>
+          <button @click="openedComments = !openedComments; howManyCommentsShow = 3 ">
+            Ocultar comentários
+          </button>
+        </div>
+        <div class="comment" v-for="(comment, index) in post.comments" :key="comment.id"
+          v-show="index >= post.comments.length - howManyCommentsShow">
           <img :src="comment.user.avatar ? comment.user.avatar.url : '/profile-pic.jpg'" alt="" />
           <div class="comment-content">
             <span>{{ comment.user.name }}</span>
@@ -100,20 +106,17 @@
 
       </div>
 
-      <div class="commments-actions">
-        <button>Mostrar mais</button>
-        <button @click="openedComments = !openedComments">
-          Ocultar comentários
-        </button>
-      </div>
+
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import Vue, { PropOptions } from 'vue'
-import { users, reactionsPosts } from '@/store'
-import { ReactionsTypes, Post } from '~/models'
+import { users, reactionsPosts, commentsPosts } from '@/store'
+import { ReactionsTypes, Post, Comments } from '~/models'
+
+
 
 export default Vue.extend({
   name: 'PostCard',
@@ -127,6 +130,7 @@ export default Vue.extend({
     return {
       openedComments: false,
       text: '',
+      howManyCommentsShow: 3
     }
   },
   computed: {
@@ -136,18 +140,12 @@ export default Vue.extend({
   },
   methods: {
     async updateReaction(type: string) {
-      const reaction = await reactionsPosts.update({ type, postId: this.post.id })
-      const KeyIndex = type as ReactionsTypes
-
-      if (!this.post.activeReaction) {
-        this.post.activeReaction = type
-        this.post.reactionsCount[KeyIndex]++
-      } else {
-        const oldReaction = this.post.activeReaction as ReactionsTypes
-        this.post.reactionsCount[oldReaction]--
-        this.post.activeReaction = type
-        this.post.reactionsCount[KeyIndex]++
-      }
+      await reactionsPosts.update({ type, postId: this.post.id })
+    },
+    async submitComment() {
+      const content = this.text
+      this.text = ''
+      await commentsPosts.create({ content, postId: this.post.id })
     }
   }
 })

@@ -12,5 +12,8 @@ export default class ReactionsPosts extends VuexModule {
   @Action
   public async update(payload: UpdatePayload) {
     await $axios.$put('/reactions', payload)
+    this.context.commit('posts/timelineposts/UPDATE_POST_REACTION', payload, {
+      root: true
+    })
   }
 }

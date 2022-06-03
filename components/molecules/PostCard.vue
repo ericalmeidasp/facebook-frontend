@@ -97,11 +97,13 @@
           v-show="index >= post.comments.length - howManyCommentsShow">
           <img :src="comment.user.avatar ? comment.user.avatar.url : '/profile-pic.jpg'" alt="" />
           <div class="comment-content">
-            <span>{{ comment.user.name }}</span>
+            <span>{{ comment.user.name }} </span>
             <p>
               {{ comment.content }}
             </p>
+
           </div>
+          <button v-show="comment.user.id === $user.id" @click="deleteComment(comment.id)">X</button>
         </div>
 
       </div>
@@ -114,7 +116,7 @@
 <script lang="ts">
 import Vue, { PropOptions } from 'vue'
 import { users, reactionsPosts, commentsPosts } from '@/store'
-import { ReactionsTypes, Post, Comments } from '~/models'
+import { Post } from '~/models'
 
 
 
@@ -146,7 +148,11 @@ export default Vue.extend({
       const content = this.text
       this.text = ''
       await commentsPosts.create({ content, postId: this.post.id })
+    },
+    async deleteComment(id: number) {
+      await commentsPosts.destroy({ commentId: id, postId: this.post.id })
     }
+
   }
 })
 </script>
@@ -353,7 +359,7 @@ export default Vue.extend({
 
       .comment {
         display: grid;
-        grid-template-columns: auto 1fr;
+        grid-template-columns: auto 1fr 20px;
         align-items: center;
         grid-gap: 1rem;
 
@@ -376,6 +382,13 @@ export default Vue.extend({
           width: 2.688rem;
           border-radius: 50%;
         }
+      }
+
+      button {
+        height: 100%;
+        background: color(dark, shade2);
+        border-radius: 1.25rem;
+        color: red;
       }
     }
 

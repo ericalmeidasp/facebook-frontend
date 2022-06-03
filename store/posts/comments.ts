@@ -7,12 +7,25 @@ interface StorePayload {
   postId: number
 }
 
+interface DestroyPayload {
+  commentId: number
+  postId: number
+}
+
 @Module({ name: 'posts/comments', stateFactory: true, namespaced: true })
 export default class CommentsPosts extends VuexModule {
   @Action
   public async create(payload: StorePayload) {
     const comment: Comments = await $axios.$post('/comments', payload)
-    this.context.commit('posts/timelineposts/UPDATE_POST_COMMENT', comment, { root: true })
-    
+    this.context.commit('posts/timelineposts/UPDATE_POST_COMMENT', comment, {
+      root: true
+    })
+  }
+
+  public async destroy(payload: DestroyPayload) {
+    await $axios.$delete(`/comments/${payload.commentId}`)
+    this.context.commit('posts/timelineposts/DESTROY_POST_COMMENT', payload, {
+      root: true
+    })
   }
 }

@@ -7,6 +7,11 @@ interface UpdatePostReactionPayload {
   postId: number
 }
 
+interface DestroyCommentPayload {
+  commentId: number
+  postId: number
+}
+
 @Module({ name: 'posts/timelineposts', stateFactory: true, namespaced: true })
 export default class TimelinePosts extends VuexModule {
   private posts = [] as Post[]
@@ -43,6 +48,19 @@ export default class TimelinePosts extends VuexModule {
       (element) => element.id === comment.postId
     )
     this.posts[index].comments.push(comment)
+  }
+
+  @Mutation
+  DESTROY_POST_COMMENT(payload: DestroyCommentPayload) {
+    const index = this.posts.findIndex(
+      (element) => element.id === payload.postId
+    )
+
+    const commentIndex = this.posts[index].comments.findIndex(
+      (comment) => comment.id === payload.commentId
+    )
+
+    this.posts[index].comments.splice(commentIndex, 1)
   }
 
   @Action

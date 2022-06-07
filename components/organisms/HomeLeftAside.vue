@@ -2,7 +2,7 @@
   <Aside :class="{ 'is-menu-active': isMenuActive }">
     <div class="content">
       <div class="profile-avatar">
-        <img :src="$user.avatar.url || '@/assets/img/profile-pic.jpg'" alt="" />
+        <img :src="$user.avatar ? $user.avatar.url : '/profile-pic.jpg'" alt="" />
 
         <p>{{ $user.name }}</p>
         <BaseButton

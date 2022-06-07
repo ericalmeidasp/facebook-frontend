@@ -39,7 +39,8 @@ export default Vue.extend({
   justify-self: center;
 
   @include screen('infinity', 'large') {
-    max-width: 650px;
+    max-width: 750px;
+    width: 100%;
   }
 
   @include screen('small') {

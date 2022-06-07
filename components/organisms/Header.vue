@@ -16,7 +16,7 @@
 
     <div class="menu-bar-actions">
       <NuxtLink :to="`/${$user.username}`" class="profile-avatar">
-        <img :src="$user.avatar.url || '@/assets/img/profile-pic.jpg'" alt="Foto do perfil" />
+        <img :src="$user.avatar ? $user.avatar.url : '/profile-pic.jpg'" alt="Foto do perfil" />
         <p>{{ $user.name }}</p>
       </NuxtLink>
 

@@ -1,6 +1,6 @@
 <template>
   <form
-    @submit.prevent="sendPost()"
+    @submit.prevent="submitPost"
     ref="postform"
     class="post-form"
     :class="{ 'active-form': isWritingANewPost, 'has-text': hasText }"
@@ -12,20 +12,22 @@
         v-model="text"
         @focused="isWritingANewPost = true"
         placeholder="No que você está pensando?"
+        @focusout="cancelPost()"
       />
     </div>
 
-    <div v-show="false" class="uploaded-image-preview">
-      <img :src="$user.avatar ? $user.avatar.url : '/profile-pic.jpg'" alt="" />
+    <div v-show="images.file" class="uploaded-image-preview">
+      <img :src="images.url" alt="" />
     </div>
 
     <div v-show="isWritingANewPost || hasText" class="form-action">
-      <button class="upload-button">
-        <img src="@/assets/img/camera-icon.svg" alt="" />
-      </button>
+      <label for="carregar-foto" class="upload-button">
+      <img src="@/assets/img/camera-icon.svg" alt="" />
+      </label>
+        <input id="carregar-foto" type="file" @change="uploadFile" ref="file" hidden>
 
       <div>
-        <button @click="cancelPost()">Cancelar</button>
+        <button @click.prevent="cancelPost">Cancelar</button>
         <button>Enviar</button>
       </div>
     </div>
@@ -34,13 +36,14 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { users } from '@/store'
+import { users, timelinePosts } from '@/store'
 
 export default Vue.extend({
   data(): any {
     return {
       text: '',
       isWritingANewPost: false,
+      images: {file: null, url: null}
     }
   },
   computed: {
@@ -52,13 +55,19 @@ export default Vue.extend({
     }
   },
   methods: {
-    sendPost() {
-      console.log(this.text)
+    submitPost() {
+      timelinePosts.create({ description: this.text })
+      this.text = ''
     },
     cancelPost() {
       this.text = ''
       this.isWritingANewPost = false
+      this.images = {file: null, url: null}
     },
+    uploadFile() {
+        this.images.file = this.$refs.file.files[0];
+        this.images.url = URL.createObjectURL(this.images.file)
+      },
   },
   mounted() {
     window.addEventListener('click', (e) => {
@@ -68,7 +77,7 @@ export default Vue.extend({
         this.isWritingANewPost = false
       }
     })
-  },
+  }
 })
 </script>
 
@@ -105,6 +114,7 @@ export default Vue.extend({
       max-height: 51vh;
       object-fit: cover;
       box-shadow: 1px 4.6px 9px rgba(0, 0, 0, 0.35);
+      border-radius: 10px;
     }
   }
   .form-action {

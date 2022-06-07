@@ -7,6 +7,10 @@ interface UpdatePostReactionPayload {
   postId: number
 }
 
+interface CreatePostPayload {
+  description: string
+}
+
 interface DestroyCommentPayload {
   commentId: number
   postId: number
@@ -23,6 +27,11 @@ export default class TimelinePosts extends VuexModule {
   @Mutation
   private GETTIMELINE_POSTS(posts: Post[]) {
     this.posts = posts
+  }
+
+  @Mutation
+  private CREATE_POST(post: Post) {
+    this.posts.splice(0, 0, post)
   }
 
   @Mutation
@@ -67,5 +76,11 @@ export default class TimelinePosts extends VuexModule {
   public async index() {
     const posts: Post[] = await $axios.$get('/posts')
     this.context.commit('GETTIMELINE_POSTS', posts)
+  }
+
+  @Action
+  public async create(payload: CreatePostPayload) {
+    const post: Post = await $axios.$post('/posts', payload)
+    this.context.commit('CREATE_POST', post)
   }
 }
